@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:13
@@ -8,8 +10,13 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./postcard_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d postcard_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+
+  postcard_service:
+    build: ./postcard_service
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+
+volumes:  # Этот раздел должен быть в корне файла
+  db_data:  # Объявляем том
