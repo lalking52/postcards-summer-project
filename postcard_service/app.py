@@ -3,6 +3,17 @@ import psycopg2
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return """
+    <h1>Postcard Service</h1>
+    <p>Доступные эндпоинты:</p>
+    <ul>
+        <li>GET /postcards - получить все открытки</li>
+        <li>POST /postcards - создать новую открытку</li>
+    </ul>
+    """
+
 def get_db_connection():
     conn = psycopg2.connect(
         host='db',
