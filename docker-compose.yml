@@ -9,20 +9,33 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./postcard_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d postcard_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   postcard_service:
     build: ./postcard_service
     ports:
       - "5001:5000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: "postgresql://user:password@db:5432/postcard_db"
 
   user_service:
     build: ./user_service
     ports:
       - "5002:5000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/postcard_db"
 
 volumes:
   db_data:

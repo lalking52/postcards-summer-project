@@ -20,5 +20,5 @@ Infrastructure: Docker
 
 | Метод  | URL              | Действие               | Пример запроса                                                                 |
 |--------|------------------|------------------------|-------------------------------------------------------------------------------|
-| `GET`  | `/postcards`     | Получить все открытки  | `curl http://localhost:5001/postcards`                                        |
+| `GET`  | `/postcards`     | Получить все открытки  | `curl -s http://localhost:5001/postcards jq`                                        |
 | `POST` | `/postcards`     | Создать открытку       | `curl -X POST -H "Content-Type: application/json" -d '{"recipient":"Друг", "message":"Привет!"}' http://localhost:5001/postcards` |
