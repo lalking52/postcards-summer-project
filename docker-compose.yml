@@ -1,3 +1,6 @@
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+
 services:
   db:
     image: postgres:13
@@ -7,9 +10,10 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./postcard_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d postcard_db"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -20,6 +24,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/postcard_db"
 
   user_service:
     build: ./user_service
@@ -28,6 +34,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/postcard_db"
 
 volumes:
   db_data:
+EOF
