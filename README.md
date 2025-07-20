@@ -1,6 +1,7 @@
 # Postcard Microservice
 
 **Простой сервис для создания и хранения открыток**  
+На вход подается получатель (имя и тп) recepient, и сообщение meassage. Запрос как в примере.
 *Flask + PostgreSQL в Docker*
 
 
